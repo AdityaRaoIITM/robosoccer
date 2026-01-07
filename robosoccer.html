@@ -9,7 +9,7 @@
     <style>
         :root {
             --ochre: #DAA520;
-            --dark-green: #007a00; /* Slightly brightened from #004d00 */
+            --dark-green: #007a00;
             --black: #050505;
         }
 
@@ -45,7 +45,6 @@
             height: 100%;
             background: radial-gradient(circle, rgba(218, 165, 32, 0.2) 0%, transparent 70%);
             filter: blur(40px);
-            /* Constant left-to-right linear motion */
             animation: haze-move 12s linear infinite;
             pointer-events: none;
             z-index: -1;
@@ -59,21 +58,20 @@
         /* Hero Text Pulsate Animation */
         @keyframes pulsate {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.2)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.5)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.5)); }
         }
 
         #hero-text {
             user-select: none;
             white-space: nowrap;
             animation: pulsate 4s ease-in-out infinite;
-            display: block; /* Changed to block for mx-auto centering */
+            display: block;
         }
 
         #hero-text:active {
             transform: scale(0.98) !important;
         }
 
-        /* Canvas background for Galaxy */
         #galaxy-canvas {
             position: absolute;
             top: 0;
@@ -84,15 +82,16 @@
             pointer-events: none;
         }
 
-        /* Logo Effect */
-        .logo-container {
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 0 10px rgba(0, 122, 0, 0.5));
+        /* Poster Container Glow & Hover */
+        .poster-wrapper {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 40px rgba(218, 165, 32, 0.15), inset 0 0 20px rgba(0, 122, 0, 0.1);
         }
 
-        .logo-container:hover {
-            transform: scale(1.05) rotate(2deg);
-            filter: drop-shadow(0 0 25px var(--ochre));
+        .poster-wrapper:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 0 60px rgba(218, 165, 32, 0.3), inset 0 0 30px rgba(0, 122, 0, 0.2);
+            border-color: var(--ochre);
         }
 
         .ochre-gradient {
@@ -120,7 +119,6 @@
             z-index: 10;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -152,40 +150,39 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section class="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden">
         <canvas id="galaxy-canvas"></canvas>
         
         <div class="relative z-10 text-center px-4 w-full flex flex-col items-center" id="hero-container">
-            <!-- RoboSoccer 4: Centered with mx-auto -->
-            <h1 id="hero-text" class="text-5xl sm:text-7xl md:text-9xl font-bold mb-2 ochre-gradient uppercase tracking-tighter mx-auto">
+            <h1 id="hero-text" class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-2 ochre-gradient uppercase tracking-tighter mx-auto">
                 RoboSoccer 4
             </h1>
 
-            <!-- MARGAZHI 2026: Balanced tracking offset for perfect centering -->
             <div class="text-white opacity-80 text-sm sm:text-lg md:text-2xl tracking-[0.4em] pl-[0.4em] uppercase mb-2 font-light">
                 MARGAZHI 2026
             </div>
             
-            <!-- Tagline: Balanced tracking offset -->
-            <p class="text-[var(--dark-green)] font-mono font-bold tracking-[0.5em] pl-[0.5em] mb-6 uppercase text-[10px] sm:text-xs md:text-sm">
+            <p class="text-[var(--dark-green)] font-mono font-bold tracking-[0.5em] pl-[0.5em] mb-10 uppercase text-[10px] sm:text-xs md:text-sm">
                 Virtual Autonomous Bot Challenge
             </p>
 
-            <!-- Logo Placeholder -->
-            <div class="logo-container inline-block">
-                <div class="w-40 h-40 md:w-52 md:h-52 bg-zinc-900 rounded-full border-4 border-ochre overflow-hidden flex items-center justify-center relative">
-                    <!-- SVG Logo Placeholder -->
-                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-ochre opacity-80">
-                        <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="currentColor" />
-                        <circle cx="12" cy="12" r="3" stroke="var(--dark-green)" stroke-width="1"/>
-                    </svg>
-                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--dark-green)]/20 to-transparent"></div>
+            <!-- Rectangle Poster Frame -->
+            <div class="inline-block px-4">
+                <div class="poster-wrapper max-w-[280px] sm:max-w-[340px] md:max-w-[420px] bg-zinc-900/50 border-2 border-[var(--ochre)]/40 rounded-xl overflow-hidden relative group">
+                    <!-- Poster Image -->
+                    <img src="poster.png" alt="RoboSoccer Poster" class="w-full h-auto block" onerror="this.src='https://via.placeholder.com/600x800?text=RoboSoccer+Poster'">
+                    
+                    <!-- Atmospheric overlays -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+                    <div class="absolute inset-0 border-[1px] border-white/5 rounded-xl pointer-events-none"></div>
+                    
+                    <!-- Scanline effect on hover -->
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity"></div>
                 </div>
             </div>
 
-            <!-- Buttons: Flex items-center ensures horizontal centering -->
-            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
-                <a href="#" class="w-60 px-8 py-3 bg-[var(--ochre)] text-black font-bold rounded-full hover:bg-yellow-600 transition-all uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(218,165,32,0.4)] text-center">
+            <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
+                <a href="#" class="w-60 px-8 py-3 bg-[var(--ochre)] text-black font-bold rounded-full hover:bg-yellow-600 transition-all uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(218,165,32,0.4)] text-center">
                     Enter Challenge
                 </a>
                 <a href="#about" class="w-60 px-8 py-3 border border-[var(--dark-green)] text-white font-bold rounded-full hover:bg-[var(--dark-green)]/20 transition-all uppercase tracking-widest text-sm text-center">
@@ -194,8 +191,7 @@
             </div>
         </div>
         
-        <!-- Scroll indicator: Absolute centering logic -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-white">
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-white/40">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
         </div>
     </section>
@@ -237,7 +233,6 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Step 1 -->
                 <div class="card-dark p-8 rounded-xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
                         <span class="text-6xl font-black">01</span>
@@ -246,7 +241,6 @@
                     <p class="text-zinc-400 text-sm">Download the scene file and installation guides. Participants get 7-8 days to implement autonomous logic.</p>
                 </div>
 
-                <!-- Step 2 -->
                 <div class="card-dark p-8 rounded-xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
                         <span class="text-6xl font-black">02</span>
@@ -255,7 +249,6 @@
                     <p class="text-zinc-400 text-sm">Submit your scene file and a demonstration video showing the robot successfully scoring goals.</p>
                 </div>
 
-                <!-- Step 3 -->
                 <div class="card-dark p-8 rounded-xl relative overflow-hidden group border border-[var(--dark-green)]">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
                         <span class="text-6xl font-black text-[var(--dark-green)]">03</span>
@@ -288,7 +281,6 @@
     </footer>
 
     <script>
-        // --- Galaxy Animation Logic ---
         const canvas = document.getElementById('galaxy-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -324,7 +316,6 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Galaxy movement on mouse hover
                 if (mouse.x && mouse.y) {
                     const dx = this.x - mouse.x;
                     const dy = this.y - mouse.y;
@@ -352,6 +343,7 @@
         }
 
         function createGalaxy() {
+            particles = [];
             const count = Math.min(window.innerWidth / 3, 400);
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle());
@@ -367,7 +359,6 @@
             requestAnimationFrame(animate);
         }
 
-        // Initialize
         window.onload = () => {
             resize();
             createGalaxy();
