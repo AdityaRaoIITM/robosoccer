@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboSoccer 4 - MARGAZHI 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ochre: #DAA520;
+            --dark-green: #007a00; /* Slightly brightened from #004d00 */
+            --black: #050505;
+        }
+
+        body {
+            background-color: var(--black);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* --- Dynamic Hazy Top Bar --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(218, 165, 32, 0.1);
+            overflow: hidden;
+        }
+
+        nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.2) 0%, transparent 70%);
+            filter: blur(40px);
+            /* Constant left-to-right linear motion */
+            animation: haze-move 12s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes haze-move {
+            0% { transform: translateX(-150%); }
+            100% { transform: translateX(250%); }
+        }
+
+        /* Hero Text Pulsate Animation */
+        @keyframes pulsate {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.2)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.5)); }
+        }
+
+        #hero-text {
+            user-select: none;
+            white-space: nowrap;
+            animation: pulsate 4s ease-in-out infinite;
+            display: block; /* Changed to block for mx-auto centering */
+        }
+
+        #hero-text:active {
+            transform: scale(0.98) !important;
+        }
+
+        /* Canvas background for Galaxy */
+        #galaxy-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Logo Effect */
+        .logo-container {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 10px rgba(0, 122, 0, 0.5));
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05) rotate(2deg);
+            filter: drop-shadow(0 0 25px var(--ochre));
+        }
+
+        .ochre-gradient {
+            background: linear-gradient(135deg, #DAA520, #8B6508);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-dark {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 122, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--ochre);
+        }
+
+        section {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--dark-green);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--ochre);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="py-5 px-8 flex justify-between items-center">
+        <div class="text-xl font-bold tracking-widest text-white relative z-10">
+            <span class="text-[var(--ochre)]">ROBO</span>SOCCER 4
+        </div>
+        <div class="hidden md:flex space-x-8 font-semibold uppercase text-xs tracking-widest relative z-10">
+            <a href="#" class="nav-link">Youtube</a>
+            <a href="#" class="nav-link">Tutorials</a>
+            <a href="#" class="nav-link">Configurator</a>
+            <a href="#about" class="nav-link">About</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+        <canvas id="galaxy-canvas"></canvas>
+        
+        <div class="relative z-10 text-center px-4 w-full flex flex-col items-center" id="hero-container">
+            <!-- RoboSoccer 4: Centered with mx-auto -->
+            <h1 id="hero-text" class="text-5xl sm:text-7xl md:text-9xl font-bold mb-2 ochre-gradient uppercase tracking-tighter mx-auto">
+                RoboSoccer 4
+            </h1>
+
+            <!-- MARGAZHI 2026: Balanced tracking offset for perfect centering -->
+            <div class="text-white opacity-80 text-sm sm:text-lg md:text-2xl tracking-[0.4em] pl-[0.4em] uppercase mb-2 font-light">
+                MARGAZHI 2026
+            </div>
+            
+            <!-- Tagline: Balanced tracking offset -->
+            <p class="text-[var(--dark-green)] font-mono font-bold tracking-[0.5em] pl-[0.5em] mb-6 uppercase text-[10px] sm:text-xs md:text-sm">
+                Virtual Autonomous Bot Challenge
+            </p>
+
+            <!-- Logo Placeholder -->
+            <div class="logo-container inline-block">
+                <div class="w-40 h-40 md:w-52 md:h-52 bg-zinc-900 rounded-full border-4 border-ochre overflow-hidden flex items-center justify-center relative">
+                    <!-- SVG Logo Placeholder -->
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-ochre opacity-80">
+                        <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="currentColor" />
+                        <circle cx="12" cy="12" r="3" stroke="var(--dark-green)" stroke-width="1"/>
+                    </svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--dark-green)]/20 to-transparent"></div>
+                </div>
+            </div>
+
+            <!-- Buttons: Flex items-center ensures horizontal centering -->
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
+                <a href="#" class="w-60 px-8 py-3 bg-[var(--ochre)] text-black font-bold rounded-full hover:bg-yellow-600 transition-all uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(218,165,32,0.4)] text-center">
+                    Enter Challenge
+                </a>
+                <a href="#about" class="w-60 px-8 py-3 border border-[var(--dark-green)] text-white font-bold rounded-full hover:bg-[var(--dark-green)]/20 transition-all uppercase tracking-widest text-sm text-center">
+                    View Details
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator: Absolute centering logic -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-white">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        </div>
+    </section>
+
+    <!-- Abstract Section -->
+    <section id="about" class="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-4xl font-bold mb-8 ochre-gradient uppercase">The Mission</h2>
+                <p class="text-lg leading-relaxed text-zinc-400 mb-6">
+                    RoboSoccer 4.0 is an online robotics coding challenge built around a custom <span class="text-white font-semibold">CoppeliaSim</span> simulation. Participants receive a ready-made scene that includes the robot, ball, obstacles, and goal area.
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card-dark p-4 rounded-lg">
+                        <div class="text-[var(--ochre)] font-bold text-xl mb-1">0%</div>
+                        <div class="text-xs uppercase text-zinc-500">Hardware Required</div>
+                    </div>
+                    <div class="card-dark p-4 rounded-lg">
+                        <div class="text-[var(--ochre)] font-bold text-xl mb-1">Python/Lua</div>
+                        <div class="text-xs uppercase text-zinc-500">Control Scripts</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-dark p-8 rounded-2xl border-l-4 border-l-[var(--ochre)]">
+                <h3 class="text-xl font-bold mb-4 text-white uppercase italic">Event Abstract</h3>
+                <p class="text-sm text-zinc-400 italic leading-relaxed">
+                    "The task is to write autonomous logic inside the simulator to move the bot and score goals. We provide clear documentation for installing and setting up CoppeliaSim on both Windows and Linux to ensure a smooth start for all, even simulation beginners."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Details Section -->
+    <section class="py-24 bg-zinc-950/50">
+        <div class="max-w-6xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 ochre-gradient uppercase text-center">Challenge Timeline</h2>
+                <div class="w-24 h-1 bg-[var(--dark-green)] mx-auto"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="card-dark p-8 rounded-xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                        <span class="text-6xl font-black">01</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-[var(--ochre)] uppercase">Setup & Scripting</h3>
+                    <p class="text-zinc-400 text-sm">Download the scene file and installation guides. Participants get 7-8 days to implement autonomous logic.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="card-dark p-8 rounded-xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                        <span class="text-6xl font-black">02</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-[var(--ochre)] uppercase">Round 1 Submission</h3>
+                    <p class="text-zinc-400 text-sm">Submit your scene file and a demonstration video showing the robot successfully scoring goals.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="card-dark p-8 rounded-xl relative overflow-hidden group border border-[var(--dark-green)]">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                        <span class="text-6xl font-black text-[var(--dark-green)]">03</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-[var(--ochre)] uppercase">Live Finals</h3>
+                    <p class="text-zinc-400 text-sm">A 3-minute real-time showdown on Google Meet. Most goals wins. Tie-breakers conducted if necessary.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Organizers -->
+    <footer class="py-12 border-t border-white/5 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0 text-center md:text-left">
+            <div>
+                <h4 class="text-[var(--ochre)] font-bold uppercase tracking-widest text-sm mb-4">Proposed By</h4>
+                <p class="text-white font-semibold">Amirtha Varshini Elavarasun</p>
+                <p class="text-white font-semibold">Sivaraman</p>
+                <p class="text-zinc-500 text-xs mt-2 uppercase tracking-tighter">Technicals Department - Paradox'26, IIT Madras</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-zinc-400 hover:text-[var(--ochre)] transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="#" class="text-zinc-400 hover:text-[var(--ochre)] transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Galaxy Animation Logic ---
+        const canvas = document.getElementById('galaxy-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.color = Math.random() > 0.5 ? '#DAA520' : '#007a00';
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Galaxy movement on mouse hover
+                if (mouse.x && mouse.y) {
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 200) {
+                        const angle = Math.atan2(dy, dx);
+                        const force = (200 - distance) / 200;
+                        this.x += Math.cos(angle + 0.1) * force * 2;
+                        this.y += Math.sin(angle + 0.1) * force * 2;
+                    }
+                }
+
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.init();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+            }
+        }
+
+        function createGalaxy() {
+            const count = Math.min(window.innerWidth / 3, 400);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        window.onload = () => {
+            resize();
+            createGalaxy();
+            animate();
+        };
+    </script>
+</body>
+</html>
